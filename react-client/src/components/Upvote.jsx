@@ -8,6 +8,8 @@ class Upvote extends React.Component {
       canClick: true,
       categoryId: this.props.categoryId,
       courseId: this.props.courseId,
+      isClicked: false,
+      displayLoginWarning: false,
     };
   }
   componentDidMount() {}
@@ -15,6 +17,7 @@ class Upvote extends React.Component {
   handleUpvoteClick() {
     // Is the user logged in? Username only fills when user is logged in.
     if (this.props.username !== '') {
+      this.setState({ displayLoginWarning: false });
       // Can the button be clicked? Used to prevent spamming.
       if (this.state.canClick) {
         // Disallow clicking until the upvote request has completed.
@@ -29,7 +32,15 @@ class Upvote extends React.Component {
               })
               .then((response) => {
                 // Once the upvote request has ben fullfilled, allow clicking.
-                this.setState({ canClick: true }, () => {
+
+                //Use this in setstate to take prev state and toggle isClicked
+                const updateState = (prevState) => {
+                  return {
+                    isClicked: !prevState.isClicked,
+                    canClick: true,
+                  };
+                };
+                this.setState(updateState, () => {
                   // Then refresh the upvote data in app level state. refreshUpvotes has been bound to app level.
                   this.props.refreshUpvotes({ categoryId: this.props.categoryId });
                 });
@@ -43,16 +54,21 @@ class Upvote extends React.Component {
         });
         // User is spamming the upvote button faster than the request can be processed.
       } else console.log('Can not click yet.');
+      //User is not logged in, display warning
+    } else {
+      this.setState({ displayLoginWarning: true });
     }
     console.groupEnd();
   }
 
   render() {
+    const { isClicked, displayLoginWarning } = this.state;
+    const buttonClasses = isClicked ? 'btn btn-success' : 'btn btn-muted';
     return (
       <div>
         <button
           type="button"
-          className="btn btn-secondary"
+          className={buttonClasses}
           onClick={() => {
             this.handleUpvoteClick();
           }}
@@ -62,6 +78,12 @@ class Upvote extends React.Component {
         <span className="card-text text-light ml-2">
           Upvote Count:{this.props.upvotes[this.props.courseId] || 0}
         </span>
+        {
+          displayLoginWarning &&
+          <span className="text-warning space-span-left">
+            Please log in to vote!
+          </span>
+        }
       </div>
     );
   }
