@@ -4,4 +4,4 @@ bower_components/
 .DS_STORE
 
 build/
-dist/
+dist/bundle.js
