@@ -79,13 +79,13 @@ class Navigation extends React.Component {
 
     const logInLogOutNav =
       this.props.currentUser !== '' ? (
-        <li className="nav-item">
+        <li className="nav-item clickable">
           <a className="nav-link" onClick={this.props.logOutUser}>
             Logout
           </a>
         </li>
       ) : (
-        <li className="nav-item">
+        <li className="nav-item clickable">
           <a className="nav-link" onClick={this.toggleLoginModal}>
             Login
           </a>
@@ -131,7 +131,7 @@ class Navigation extends React.Component {
                         }}
                         key={category.name}
                       >
-                        <DropdownItem value={category._id} onClick={this.onDropdownChange}>
+                        <DropdownItem className="clickable" value={category._id} onClick={this.onDropdownChange}>
                           {category.name}
                         </DropdownItem>
                       </Link>
