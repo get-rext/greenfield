@@ -1,3 +1,7 @@
 .clickable {
   cursor: pointer;
 }
+
+.space-span-left {
+  margin-left: 2rem;
+}
